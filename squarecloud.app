@@ -1,0 +1,9 @@
+MAIN=scripts/start-square.sh
+RUNTIME=python
+VERSION=recommended
+MEMORY=4096
+DISPLAY_NAME=Stupidex
+DESCRIPTION=Plataforma de IA multimodelo e agente de código
+SUBDOMAIN=stupidex
+START=bash scripts/start-square.sh
+AUTORESTART=true
