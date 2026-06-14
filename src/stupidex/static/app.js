@@ -1,4 +1,4 @@
-const state={user:null,sessions:[],sessionId:null,workspaces:[],workspaceId:null,models:[],approvalId:null,authMode:'login',rightTab:'files',sending:false,rightOpen:window.matchMedia('(min-width: 1024px)').matches};
+const state={user:null,sessions:[],sessionId:null,sessionPendingDelete:null,workspaces:[],workspaceId:null,models:[],approvalId:null,authMode:'login',rightTab:'files',sending:false,rightOpen:window.matchMedia('(min-width: 1024px)').matches};
 const $=id=>document.getElementById(id);
 const api=async(path,options={})=>{const res=await fetch(path,{credentials:'include',headers:{...(options.body instanceof FormData?{}:{'Content-Type':'application/json'}),...(options.headers||{})},...options});let data={};try{data=await res.json()}catch{}if(!res.ok&&res.status!==202)throw new Error(data.error||`Erro ${res.status}`);return {data,status:res.status,res};};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -147,8 +147,58 @@ async function loadSessions(){
 }
 
 function renderSessions(){
-  $('session-list').innerHTML=state.sessions.length?state.sessions.map(s=>`<button data-session="${s.id}" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left ${s.id===state.sessionId?'bg-zinc-900 text-zinc-200':'text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200'} transition-colors"><i class="ph ph-chat-teardrop text-zinc-500"></i><span class="truncate">${esc(s.title)}</span></button>`).join(''):'<p class="px-3 text-xs text-zinc-600">Nenhuma conversa.</p>';
+  $('session-list').innerHTML=state.sessions.length?state.sessions.map(s=>`<div class="session-row group flex items-center rounded-lg ${s.id===state.sessionId?'bg-zinc-900 text-zinc-200':'text-zinc-400 hover:bg-zinc-900/60 hover:text-zinc-200'} transition-colors">
+    <button type="button" data-session="${s.id}" class="min-w-0 flex-1 flex items-center gap-2 px-3 py-2 text-sm text-left rounded-l-lg">
+      <i class="ph ph-chat-teardrop text-zinc-500 flex-shrink-0"></i>
+      <span class="truncate">${esc(s.title)}</span>
+    </button>
+    <button type="button" data-delete-session="${s.id}" aria-label="Excluir conversa ${esc(s.title)}" title="Excluir conversa" class="session-delete mr-1.5 w-7 h-7 rounded-md grid place-items-center text-zinc-600 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 focus:opacity-100 transition-all">
+      <i class="ph ph-trash"></i>
+    </button>
+  </div>`).join(''):'<p class="px-3 text-xs text-zinc-600">Nenhuma conversa.</p>';
   document.querySelectorAll('[data-session]').forEach(b=>b.onclick=()=>selectSession(b.dataset.session));
+  document.querySelectorAll('[data-delete-session]').forEach(button=>button.onclick=event=>{
+    event.stopPropagation();
+    requestSessionDelete(button.dataset.deleteSession);
+  });
+}
+
+function requestSessionDelete(id){
+  const session=state.sessions.find(item=>item.id===id);
+  if(!session)return;
+  state.sessionPendingDelete=id;
+  $('delete-session-name').textContent=session.title;
+  $('delete-session-confirm').disabled=false;
+  $('delete-session-confirm').innerHTML='<i class="ph ph-trash"></i> Excluir conversa';
+  modal('delete-session-modal');
+}
+
+async function confirmSessionDelete(){
+  const id=state.sessionPendingDelete;
+  if(!id)return;
+  const button=$('delete-session-confirm');
+  button.disabled=true;
+  button.innerHTML='<i class="ph ph-spinner animate-spin"></i> Excluindo...';
+  try{
+    const {data}=await api(`/api/sessions/${id}`,{method:'DELETE'});
+    if(!data.ok)throw new Error('A conversa não foi encontrada');
+    const wasActive=state.sessionId===id;
+    state.sessions=state.sessions.filter(session=>session.id!==id);
+    state.sessionPendingDelete=null;
+    modal('delete-session-modal',false);
+    if(wasActive){
+      state.sessionId=null;
+      if(state.sessions[0])await selectSession(state.sessions[0].id);
+      else await createSession();
+    }else{
+      renderSessions();
+    }
+    toast('Conversa excluída');
+  }catch(error){
+    toast(error.message,true);
+    button.disabled=false;
+    button.innerHTML='<i class="ph ph-trash"></i> Excluir conversa';
+  }
 }
 
 async function createSession(){
@@ -500,6 +550,7 @@ $('logout-btn').onclick=async()=>{
 
 // Modals
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>modal(b.dataset.close,false));
+$('delete-session-confirm').onclick=confirmSessionDelete;
 
 // File upload
 $('upload-btn').onclick=()=>$('file-input').click();
