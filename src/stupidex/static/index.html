@@ -1,554 +1,630 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
+<!--
+  aesthetic_dna: Tech-Noir, Minimalist Dev Tool, Liquid Glass, Electric Violet Accent
+  ui_paradigm: Collapsible Tri-Pane Workspace (Bento 2.0 Micro-architecture)
+  palette: Zinc 950 Base, Zinc 900 Surfaces, Electric Violet Accent, Emerald Success
+-->
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Stupidex | Intelligence Platform</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%237c3aed'/%3E%3Cpath d='M36 10 18 35h12l-3 19 19-27H34z' fill='white'/%3E%3C/svg%3E">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Outfit', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            zinc: { 900: '#18181b', 950: '#0a0a0a' },
-            violet: { 400: '#a78bfa', 500: '#8b5cf6', 600: '#7c3aed' }
-          },
-          boxShadow: {
-            'glass': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
-            'glow': '0 0 20px -5px rgba(124, 58, 237, 0.4)',
-          },
-          animation: {
-            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-            'fade-in': 'fadeIn 0.3s ease-out forwards',
-          },
-          keyframes: {
-            slideUp: {
-              '0%': { transform: 'translateY(10px)', opacity: '0' },
-              '100%': { transform: 'translateY(0)', opacity: '1' },
-            },
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Stupidex | Intelligence Platform</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        zinc: {
+                            900: '#18181b',
+                            950: '#0a0a0a',
+                        },
+                        violet: {
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    boxShadow: {
+                        'glass': 'inset 0 1px 0 0 rgba(255, 255, 255, 0.05)',
+                        'glow': '0 0 20px -5px rgba(124, 58, 237, 0.4)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-up': 'slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
+    </script>
 
-  <style>
-    * { box-sizing: border-box; }
-    html, body, #app { max-width: 100%; overflow-x: hidden; }
-    body { font-family: 'Outfit', sans-serif; background: #08080a; }
-    button, input, select, textarea { font: inherit; }
-    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 2px solid rgba(139, 92, 246, 0.8);
-      outline-offset: 2px;
-    }
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+        /* Utilities */
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.02);
+        }
 
-    /* Glass Panel */
-    .glass-panel {
-      background: rgba(24, 24, 27, 0.6);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.02);
-    }
+        .text-glow {
+            text-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+        }
 
-    .text-glow { text-shadow: 0 0 10px rgba(124, 58, 237, 0.5); }
+        .stripe-bg {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.02) 10px,
+                rgba(255,255,255,0.02) 20px
+            );
+        }
 
-    .stripe-bg {
-      background-image: repeating-linear-gradient(-45deg, transparent, transparent 10px, rgba(255,255,255,0.02) 10px, rgba(255,255,255,0.02) 20px);
-    }
+        /* Staggered lists */
+        .stagger-1 { animation-delay: 50ms; }
+        .stagger-2 { animation-delay: 100ms; }
+        .stagger-3 { animation-delay: 150ms; }
+        .stagger-4 { animation-delay: 200ms; }
 
-    /* Staggered animations */
-    .stagger-1 { animation-delay: 50ms; }
-    .stagger-2 { animation-delay: 100ms; }
-    .stagger-3 { animation-delay: 150ms; }
-    .stagger-4 { animation-delay: 200ms; }
+        /* Typography tweaks */
+        h1, h2, h3 { letter-spacing: -0.02em; }
+        
+        /* Shimmer Loading */
+        .shimmer {
+            background: linear-gradient(90deg, #18181b 0%, #27272a 50%, #18181b 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-    h1, h2, h3 { letter-spacing: -0.02em; }
-
-    /* Shimmer */
-    .shimmer {
-      background: linear-gradient(90deg, #18181b 0%, #27272a 50%, #18181b 100%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s infinite;
-    }
-    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-
-    /* Terminal cursor */
-    .cursor-blink { animation: blink 1s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* Modal backdrop */
-    .modal-backdrop {
-      background: rgba(0, 0, 0, 0.72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    /* Message content styling */
-    .message a { color: #a78bfa; text-decoration: underline; }
-    .message code { font-family: 'JetBrains Mono', monospace; background: #18181b; padding: .15rem .35rem; border-radius: .35rem; font-size: 0.85em; }
-    .message pre { background: #08080a; border: 1px solid #27272a; border-radius: .8rem; padding: 1rem; overflow: auto; margin: 0.75rem 0; }
-    .message pre code { background: transparent; padding: 0; }
-    .message h1, .message h2, .message h3 { font-weight: 600; margin: .9rem 0 .4rem; }
-    .message p { margin: .45rem 0; }
-    .message ul { list-style: disc; margin-left: 1.25rem; }
-    .message ol { list-style: decimal; margin-left: 1.25rem; }
-
-    /* Code font utility */
-    .code { font-family: 'JetBrains Mono', monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
-
-    /* Toast */
-    .toast-error { background: #450a0a; border-color: rgba(239, 68, 68, 0.3); color: #fecaca; }
-    .toast-success { background: #18181b; border-color: rgba(255, 255, 255, 0.1); }
-
-    .right-panel { display: flex; }
-    .mode-button[aria-pressed="true"] {
-      background: #27272a;
-      color: #fff;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
-    }
-    #composer { min-height: 58px; max-height: 180px; }
-    #messages { padding-bottom: 190px; }
-    .is-busy { cursor: wait; opacity: .7; }
-    .model-menu {
-      width: min(390px, calc(100vw - 24px));
-      max-height: min(620px, calc(100dvh - 84px));
-      background: rgba(17, 17, 20, .98);
-      box-shadow: 0 24px 70px rgba(0,0,0,.58), inset 0 1px 0 rgba(255,255,255,.05);
-      transform-origin: top right;
-    }
-    .model-menu:not(.hidden) { animation: modelMenuIn .16s cubic-bezier(.16, 1, .3, 1); }
-    .model-option[aria-selected="true"] {
-      background: linear-gradient(90deg, rgba(124,58,237,.18), rgba(124,58,237,.06));
-      border-color: rgba(139,92,246,.35);
-    }
-    .model-option[aria-selected="true"] .model-check { opacity: 1; transform: scale(1); }
-    .model-check { opacity: 0; transform: scale(.7); transition: .15s ease; }
-    .provider-mark { box-shadow: inset 0 1px 0 rgba(255,255,255,.1); }
-    @media (hover: none) {
-      .session-delete { opacity: 1; }
-    }
-    @keyframes modelMenuIn {
-      from { opacity: 0; transform: translateY(-6px) scale(.98); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @media (min-width: 1024px) {
-      .right-panel.panel-closed { display: none !important; }
-    }
-
-    @media (max-width: 1023px) {
-      .right-panel {
-        position: fixed;
-        inset: 0 0 0 auto;
-        width: min(380px, 100vw) !important;
-        transform: translateX(100%);
-        transition: transform .25s cubic-bezier(.16, 1, .3, 1);
-        box-shadow: -24px 0 60px rgba(0,0,0,.45);
-      }
-      .right-panel.panel-open { transform: translateX(0); }
-    }
-
-    @media (max-width: 639px) {
-      #top-project, #top-separator { display: none; }
-      #top-title { max-width: 118px; }
-      #model-trigger { max-width: 130px; gap: .35rem; padding-left: .5rem; padding-right: .5rem; }
-      #model-trigger > .model-sparkle, #model-selected-provider { display: none; }
-      #model-selected-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      #model-menu {
-        position: fixed;
-        top: 60px;
-        right: 12px;
-        left: 12px;
-        width: auto;
-        max-height: calc(100dvh - 72px);
-      }
-      #model-options { max-height: calc(100dvh - 190px); }
-      #messages { padding-bottom: 220px; }
-      .welcome-state { justify-content: flex-start; padding-top: 1.25rem; }
-      .welcome-state > :not([hidden]) ~ :not([hidden]) { margin-top: .75rem; }
-      .welcome-state .grid { gap: .5rem; }
-      .welcome-state .quick { min-height: 60px; padding: .6rem 1rem; }
-      .welcome-state .quick i { display: inline-block; margin: 0 .5rem 0 0; vertical-align: middle; }
-    }
-  </style>
+        /* Terminal Cursor */
+        .cursor-blink { animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
 </head>
 <body class="bg-zinc-950 text-zinc-50 h-[100dvh] w-full overflow-hidden flex selection:bg-violet-600/30 selection:text-white">
 
-  <!-- AUTH SCREEN -->
-  <div id="auth-screen" class="fixed inset-0 z-[100] bg-zinc-950 flex items-center justify-center p-5">
-    <div class="glass-panel w-full max-w-md rounded-3xl p-7 shadow-2xl">
-      <div class="flex items-center gap-3 mb-7">
-        <div class="w-10 h-10 bg-violet-600 rounded-xl grid place-items-center shadow-glow">
-          <i class="ph-bold ph-lightning text-xl"></i>
+    <!-- OVERLAY: Agent Action Walkthrough (Scroll Sequence Canvas) -->
+    <!-- Triggered via UI, absolute positioned. Hidden by default for main UI -->
+    <div id="agent-overlay" class="fixed inset-0 z-50 bg-zinc-950/90 backdrop-blur-md hidden flex-col">
+        <header class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-zinc-950/50">
+            <div class="flex items-center gap-3">
+                <i class="ph ph-cpu text-violet-500 text-xl"></i>
+                <span class="font-medium">Agente: Refatoração Auth System</span>
+            </div>
+            <button onclick="document.getElementById('agent-overlay').classList.add('hidden')" class="p-2 hover:bg-zinc-800 rounded-lg transition-colors">
+                <i class="ph ph-x"></i>
+            </button>
+        </header>
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Left: Logs (Scrollable) -->
+            <div id="overlay-scroll-container" class="w-1/3 border-r border-white/5 overflow-y-auto p-6 font-mono text-sm text-zinc-400 space-y-4 relative">
+                <!-- Spacer for scrolling effect -->
+                <div class="h-[200vh] absolute inset-x-0 top-0 pointer-events-none"></div>
+                
+                <div class="sticky top-0 space-y-4">
+                    <div class="flex items-start gap-3 text-zinc-300">
+                        <span class="text-violet-500">▶</span>
+                        <div>
+                            <div class="text-white">Iniciando análise do repositório...</div>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="text-emerald-500">✓</span> <div>Lido `src/auth/login.ts` (1.2kb)</div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                        <span class="text-emerald-500">✓</span> <div>Lido `src/auth/jwt.ts` (3.4kb)</div>
+                    </div>
+                    <div class="flex items-start gap-3 text-zinc-300 mt-8">
+                        <span class="text-violet-500 animate-pulse">⚙</span>
+                        <div>
+                            <div class="text-white">Gerando nova implementação...</div>
+                            <div class="text-xs text-zinc-500 mt-1">Utilizando context window: 12,403 tokens.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right: Visualizer (Canvas) -->
+            <div class="w-2/3 relative bg-black flex items-center justify-center">
+                <canvas id="sequence-canvas" class="max-w-full max-h-full object-contain opacity-80 mix-blend-screen"></canvas>
+                <div class="absolute bottom-6 left-6 flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-900/50 border border-white/10 backdrop-blur-sm text-xs font-mono">
+                    <span class="w-2 h-2 rounded-full bg-violet-500 animate-pulse"></span>
+                    Otimizando rotina neural
+                </div>
+            </div>
         </div>
-        <div>
-          <h1 class="text-xl font-semibold">Stupidex</h1>
-          <p class="text-xs text-zinc-500">IA multimodelo e agente de código</p>
-        </div>
-      </div>
-      <div class="grid grid-cols-2 bg-zinc-900 rounded-xl p-1 mb-5">
-        <button id="login-tab" class="rounded-lg py-2 text-sm bg-zinc-800 font-medium transition-colors">Entrar</button>
-        <button id="register-tab" class="rounded-lg py-2 text-sm text-zinc-400 transition-colors">Criar conta</button>
-      </div>
-      <form id="auth-form" class="space-y-3">
-        <input id="auth-username" required minlength="3" autocomplete="username" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-violet-500 transition-colors" placeholder="Usuário">
-        <input id="auth-password" required minlength="8" type="password" autocomplete="current-password" class="w-full bg-zinc-900 border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-violet-500 transition-colors" placeholder="Senha">
-        <button class="w-full bg-violet-600 hover:bg-violet-500 rounded-xl py-3 font-medium transition-all transform active:scale-[0.98] shadow-glow">Continuar</button>
-        <p id="auth-error" class="text-sm text-red-400 min-h-5"></p>
-      </form>
     </div>
-  </div>
 
-  <!-- MAIN APP -->
-  <div id="app" class="hidden w-full h-full">
 
-    <div class="flex h-full w-full">
+    <!-- ========================================== -->
+    <!-- MACRO-ARCHITECTURE: THREE-PANEL LAYOUT     -->
+    <!-- ========================================== -->
 
-      <!-- LEFT SIDEBAR -->
-      <div id="mobile-backdrop" class="hidden fixed inset-0 z-30 bg-black/70 backdrop-blur-sm md:hidden"></div>
-      <aside id="left-sidebar" class="fixed md:static inset-y-0 left-0 z-40 w-[260px] flex-shrink-0 flex flex-col border-r border-white/5 bg-zinc-950/95 md:bg-zinc-950/80 -translate-x-full md:translate-x-0 transition-transform duration-300">
+    <!-- LEFT SIDEBAR -->
+    <aside class="w-[260px] flex-shrink-0 flex flex-col border-r border-white/5 bg-zinc-950/80 hidden md:flex transition-all duration-300 z-20">
         <!-- Brand & Actions -->
         <div class="p-4 flex flex-col gap-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-2 text-xl font-bold tracking-tight">
-              <div class="w-6 h-6 rounded bg-violet-600 text-white flex items-center justify-center text-sm shadow-glow">
-                <i class="ph-bold ph-lightning"></i>
-              </div>
-              Stupidex
+            <div class="flex items-center gap-2 px-2 text-xl font-bold tracking-tight">
+                <div class="w-6 h-6 rounded bg-violet-600 text-white flex items-center justify-center text-sm shadow-glow pulse-slow">
+                    <i class="ph-bold ph-lightning"></i>
+                </div>
+                Stupidex
             </div>
-            <button id="close-left" class="md:hidden p-1.5 text-zinc-400 hover:text-white">
-              <i class="ph ph-x text-lg"></i>
-            </button>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <button id="new-chat-btn" class="col-span-2 flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all transform active:scale-[0.98] shadow-glow">
-              <i class="ph ph-chat-teardrop-text"></i> Nova conversa
-            </button>
-            <button id="new-project-btn" class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-zinc-900 border border-white/5 hover:border-white/10 text-xs font-medium transition-colors">
-              <i class="ph ph-folder-plus"></i> Projeto
-            </button>
-            <button id="agent-btn" class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-zinc-900 border border-white/5 hover:border-white/10 text-xs font-medium transition-colors">
-              <i class="ph ph-robot"></i> Agente
-            </button>
-          </div>
+            
+            <div class="grid grid-cols-2 gap-2">
+                <button class="col-span-2 flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-medium text-sm transition-all transform active:scale-[0.98] shadow-glow">
+                    <i class="ph ph-chat-teardrop-text"></i> Nova conversa
+                </button>
+                <button class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-zinc-900 border border-white/5 hover:border-white/10 text-xs font-medium transition-colors">
+                    <i class="ph ph-folder-plus"></i> Projeto
+                </button>
+                <button class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-zinc-900 border border-white/5 hover:border-white/10 text-xs font-medium transition-colors">
+                    <i class="ph ph-robot"></i> Agente
+                </button>
+            </div>
         </div>
 
-        <!-- Navigation -->
+        <!-- Navigation Lists -->
         <div class="flex-1 overflow-y-auto px-3 py-2 space-y-6">
-          <section>
-            <div class="text-xs font-semibold text-zinc-500 mb-2 px-3 uppercase tracking-wider">Workspace</div>
-            <div id="workspace-list" class="space-y-1"></div>
-          </section>
-          <section>
-            <div class="text-xs font-semibold text-zinc-500 mb-2 px-3 uppercase tracking-wider">Recentes</div>
-            <div id="session-list" class="space-y-1"></div>
-          </section>
+            
+            <!-- Projects -->
+            <div>
+                <div class="text-xs font-semibold text-zinc-500 mb-2 px-3 uppercase tracking-wider">Workspace</div>
+                <div class="space-y-1">
+                    <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg bg-zinc-900 text-sm group">
+                        <div class="flex items-center gap-2 truncate">
+                            <i class="ph ph-github-logo text-zinc-400"></i>
+                            <span class="truncate">core-api-v2</span>
+                        </div>
+                        <div class="flex items-center gap-1.5 opacity-60">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                            <span class="text-[10px] font-mono">main</span>
+                        </div>
+                    </button>
+                    <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-zinc-400 hover:bg-zinc-900/50 hover:text-zinc-200 text-sm group transition-colors">
+                        <div class="flex items-center gap-2 truncate">
+                            <i class="ph ph-folder text-zinc-500"></i>
+                            <span class="truncate">frontend-portal</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Conversations -->
+            <div>
+                <div class="text-xs font-semibold text-zinc-500 mb-2 px-3 uppercase tracking-wider">Recentes</div>
+                <div class="space-y-1">
+                    <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-zinc-900/50 text-zinc-300 text-sm group transition-colors">
+                        <div class="flex items-center gap-2 truncate">
+                            <i class="ph ph-terminal-window text-zinc-500"></i>
+                            <span class="truncate">Debug Redis connection</span>
+                        </div>
+                    </button>
+                    <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-zinc-900/50 text-zinc-300 text-sm group transition-colors">
+                        <div class="flex items-center gap-2 truncate">
+                            <i class="ph ph-magic-wand text-violet-400"></i>
+                            <span class="truncate">Refactor components</span>
+                        </div>
+                    </button>
+                    <button class="w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-zinc-900/50 text-zinc-400 text-sm group transition-colors">
+                        <div class="flex items-center gap-2 truncate">
+                            <i class="ph ph-chat-teardrop text-zinc-500"></i>
+                            <span class="truncate">Explain OAuth2 flow</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <!-- User -->
+        <!-- User / Settings -->
         <div class="p-4 border-t border-white/5 space-y-3">
-          <button id="settings-btn" class="w-full flex items-center gap-3 px-2 py-1.5 hover:bg-zinc-900 rounded-lg transition-colors text-sm">
-            <div class="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden">
-              <div class="w-full h-full bg-violet-600/20 grid place-items-center">
-                <i class="ph ph-user text-violet-400"></i>
-              </div>
+            <!-- Usage mini-stat -->
+            <div class="px-2 pb-2">
+                <div class="flex justify-between text-xs text-zinc-500 mb-1">
+                    <span>Claude 3.5 Uso</span>
+                    <span>45k / 100k</span>
+                </div>
+                <div class="h-1 bg-zinc-900 rounded-full overflow-hidden">
+                    <div class="h-full bg-violet-600/80 w-[45%] rounded-full shadow-glow"></div>
+                </div>
             </div>
-            <div class="flex flex-col items-start flex-1">
-              <span id="profile-name" class="font-medium text-zinc-200"></span>
-              <span class="text-[10px] text-zinc-500">Configurações</span>
-            </div>
-            <i class="ph ph-gear text-zinc-500"></i>
-          </button>
+            
+            <button class="w-full flex items-center gap-3 px-2 py-1.5 hover:bg-zinc-900 rounded-lg transition-colors text-sm">
+                <div class="w-7 h-7 rounded-full bg-zinc-800 flex items-center justify-center overflow-hidden">
+                    <img src="https://ui-avatars.com/api/?name=Dev+Admin&background=27272a&color=fff" alt="Avatar" class="w-full h-full object-cover">
+                </div>
+                <div class="flex flex-col items-start flex-1">
+                    <span class="font-medium text-zinc-200">Dev Admin</span>
+                    <span class="text-[10px] text-zinc-500">Pro Plan</span>
+                </div>
+                <i class="ph ph-gear text-zinc-500"></i>
+            </button>
         </div>
-      </aside>
+    </aside>
 
-      <!-- CENTER AREA -->
-      <main class="flex-1 flex flex-col min-w-0 bg-zinc-950 relative">
+    <!-- CENTER AREA (Chat) -->
+    <main class="flex-1 flex flex-col min-w-0 bg-zinc-950 relative">
+        
         <!-- TOPBAR -->
         <header class="h-14 flex-shrink-0 flex items-center justify-between px-4 border-b border-white/5 bg-zinc-950/80 backdrop-blur-md z-10">
-          <div class="flex items-center gap-3">
-            <button id="open-left" class="md:hidden p-1.5 text-zinc-400 hover:text-white">
-              <i class="ph ph-list text-xl"></i>
-            </button>
-            <div class="flex items-center gap-2 text-sm min-w-0">
-              <span id="top-project" class="text-zinc-400 truncate">Nenhum projeto</span>
-              <span id="top-separator" class="text-zinc-600">/</span>
-              <span id="top-title" class="text-zinc-200 font-medium truncate">Nova conversa</span>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <!-- Mode Selector -->
-            <input id="mode-select" type="hidden" value="chat">
-            <div class="hidden sm:flex items-center rounded-lg bg-zinc-900 border border-white/5 p-0.5 text-xs" aria-label="Modo de trabalho">
-              <button type="button" data-mode="agent" aria-pressed="false" class="mode-button px-3 py-1.5 rounded-md text-zinc-500 hover:text-zinc-200 transition-colors">Agente</button>
-              <button type="button" data-mode="chat" aria-pressed="true" class="mode-button px-3 py-1.5 rounded-md text-zinc-500 hover:text-zinc-200 transition-colors">Chat</button>
-              <button type="button" data-mode="review" aria-pressed="false" class="mode-button px-3 py-1.5 rounded-md text-zinc-500 hover:text-zinc-200 transition-colors">Revisar</button>
-            </div>
-
-            <div class="h-4 w-[1px] bg-white/10 mx-1"></div>
-
-            <!-- Model Selector -->
-            <div id="model-picker" class="relative">
-              <input id="model-select" type="hidden" value="">
-              <button id="model-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-zinc-900 text-xs text-zinc-300 transition-colors border border-transparent hover:border-white/5">
-                <i class="model-sparkle ph-fill ph-sparkle text-violet-400"></i>
-                <span class="min-w-0 text-left">
-                  <span id="model-selected-label" class="block font-medium text-zinc-200">Carregando...</span>
-                  <span id="model-selected-provider" class="block text-[9px] leading-none text-zinc-600 mt-0.5"></span>
-                </span>
-                <i class="ph ph-caret-down text-zinc-600 transition-transform" id="model-caret"></i>
-              </button>
-              <div id="model-menu" role="listbox" aria-label="Modelos de IA" class="model-menu hidden absolute right-0 top-[calc(100%+10px)] z-50 overflow-hidden rounded-2xl border border-white/10">
-                <div class="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-white/[0.02]">
-                  <div>
-                    <div class="text-sm font-semibold text-zinc-100">Escolher modelo</div>
-                    <div class="text-[10px] text-zinc-500 mt-0.5">2 opções selecionadas por provedor</div>
-                  </div>
-                  <span class="text-[10px] text-violet-300 bg-violet-500/10 border border-violet-500/20 rounded-full px-2 py-1">10 modelos</span>
+            <!-- Mobile Toggle & Context -->
+            <div class="flex items-center gap-3">
+                <button class="md:hidden p-1.5 text-zinc-400 hover:text-white">
+                    <i class="ph ph-list text-xl"></i>
+                </button>
+                <div class="flex items-center gap-2 text-sm">
+                    <span class="text-zinc-400">core-api-v2</span>
+                    <span class="text-zinc-600">/</span>
+                    <span class="text-zinc-200 font-medium">Refactor components</span>
                 </div>
-                <div id="model-options" class="overflow-y-auto p-2 max-h-[min(540px,calc(100dvh-150px))]"></div>
-                <div class="px-4 py-2.5 border-t border-white/5 text-[10px] text-zinc-600 flex items-center gap-2">
-                  <i class="ph ph-keyboard"></i>
-                  Use ↑ ↓ para navegar e Enter para selecionar
-                </div>
-              </div>
             </div>
 
-            <!-- Panel Toggle -->
-            <button id="toggle-right" class="p-2 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-colors" title="Abrir ou fechar painel de contexto" aria-label="Abrir ou fechar painel de contexto">
-              <i class="ph ph-sidebar-simple text-lg"></i>
-            </button>
-          </div>
+            <!-- Controls -->
+            <div class="flex items-center gap-2">
+                <!-- Selectors -->
+                <div class="hidden sm:flex items-center rounded-lg bg-zinc-900 border border-white/5 p-0.5 text-xs">
+                    <button class="px-3 py-1.5 rounded-md bg-zinc-800 text-zinc-100 shadow-sm transition-colors">Agente</button>
+                    <button class="px-3 py-1.5 rounded-md text-zinc-400 hover:text-zinc-200 transition-colors">Chat</button>
+                    <button class="px-3 py-1.5 rounded-md text-zinc-400 hover:text-zinc-200 transition-colors">Revisar</button>
+                </div>
+                
+                <div class="h-4 w-[1px] bg-white/10 mx-1"></div>
+
+                <!-- Model Selector Trigger -->
+                <button class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-zinc-900 text-xs text-zinc-300 transition-colors border border-transparent hover:border-white/5">
+                    <i class="ph-fill ph-sparkle text-violet-400"></i>
+                    Claude 3.5 Sonnet
+                    <i class="ph ph-caret-down text-zinc-600"></i>
+                </button>
+
+                <!-- Panel Toggle -->
+                <button class="p-2 rounded-lg text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900 transition-colors hidden lg:block" title="Toggle Context Panel">
+                    <i class="ph ph-sidebar-simple text-lg"></i>
+                </button>
+            </div>
         </header>
 
         <!-- CHAT FEED -->
-        <div id="chat-feed" class="flex-1 overflow-y-auto px-4 md:px-0 py-8 scroll-smooth">
-          <div id="messages" class="max-w-[850px] mx-auto space-y-8 pb-32"></div>
+        <div class="flex-1 overflow-y-auto px-4 md:px-0 py-8 scroll-smooth" id="chat-feed">
+            <div class="max-w-[850px] mx-auto space-y-8 pb-32">
+                
+                <!-- Welcome/Home State (Hidden currently, showing chat flow) -->
+                <!-- 
+                <div class="flex flex-col items-center justify-center h-[50vh] text-center space-y-6">
+                    <div class="w-16 h-16 rounded-2xl bg-zinc-900 border border-white/10 shadow-glow flex items-center justify-center">
+                        <i class="ph-bold ph-lightning text-3xl text-violet-500"></i>
+                    </div>
+                    <h1 class="text-3xl font-medium tracking-tight">Como posso ajudar você hoje?</h1>
+                    <div class="grid grid-cols-2 gap-3 w-full max-w-lg">
+                        ... quick actions
+                    </div>
+                </div> 
+                -->
+
+                <!-- User Message -->
+                <div class="flex justify-end animate-slide-up stagger-1">
+                    <div class="max-w-[80%] bg-zinc-900 border border-white/5 rounded-2xl rounded-tr-sm px-5 py-4 text-sm text-zinc-200 float-right">
+                        Refatore o arquivo <code class="bg-black/50 px-1.5 py-0.5 rounded text-violet-300 font-mono text-xs">src/components/Header.tsx</code> para usar Hooks do React ao invés de classes, e adicione tipagem estrita no TypeScript.
+                    </div>
+                </div>
+
+                <!-- Agent Status Block (Tool Call) -->
+                <div class="flex gap-4 animate-slide-up stagger-2">
+                    <div class="w-8 h-8 rounded-full bg-violet-600/10 border border-violet-500/20 flex flex-shrink-0 items-center justify-center mt-1">
+                        <i class="ph-bold ph-robot text-violet-500"></i>
+                    </div>
+                    <div class="flex-1 max-w-[80%]">
+                        <div class="glass-panel rounded-xl overflow-hidden text-sm">
+                            <!-- Toggle Header -->
+                            <button class="w-full flex items-center justify-between px-4 py-3 bg-white/5 hover:bg-white/10 transition-colors" onclick="document.getElementById('agent-overlay').classList.remove('hidden')">
+                                <div class="flex items-center gap-3 font-medium text-zinc-300">
+                                    <i class="ph-duotone ph-hammer text-lg"></i>
+                                    Executando modificações no repositório...
+                                </div>
+                                <div class="flex items-center gap-3 text-xs">
+                                    <span class="text-zinc-500 font-mono">1.2s</span>
+                                    <i class="ph ph-caret-right text-zinc-500"></i>
+                                </div>
+                            </button>
+                            <!-- Inner Logs Preview -->
+                            <div class="px-4 pb-3 pt-1 border-t border-white/5 font-mono text-xs text-zinc-400 space-y-1.5">
+                                <div class="flex items-center gap-2"><span class="text-emerald-500">✔</span> Lendo Header.tsx</div>
+                                <div class="flex items-center gap-2"><span class="text-violet-500 animate-pulse">●</span> Reescrevendo lógica de estado...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Agent Written Response -->
+                <div class="flex gap-4 animate-slide-up stagger-3">
+                    <div class="w-8 h-8 rounded-full bg-transparent flex flex-shrink-0 justify-center mt-1">
+                        <i class="ph-bold ph-lightning text-violet-500 text-xl"></i>
+                    </div>
+                    <div class="flex-1 space-y-4">
+                        <div class="text-sm text-zinc-300 leading-relaxed">
+                            A refatoração foi concluída. Substituí os componentes de classe por <code>React.FC</code> e adicionei a interface <code>HeaderProps</code> para garantir a tipagem estrita das propriedades recebidas.
+                        </div>
+
+                        <!-- Code Block -->
+                        <div class="rounded-xl border border-white/10 bg-[#0d0d0f] overflow-hidden group">
+                            <!-- Code Header -->
+                            <div class="flex items-center justify-between px-4 py-2 border-b border-white/5 bg-zinc-900/50">
+                                <div class="flex items-center gap-2 text-xs font-mono text-zinc-400">
+                                    <i class="ph ph-file-ts text-blue-400 text-base"></i>
+                                    src/components/Header.tsx
+                                </div>
+                                <div class="flex gap-2">
+                                    <button class="text-xs flex items-center gap-1.5 px-2 py-1 rounded hover:bg-white/10 transition-colors text-zinc-400">
+                                        <i class="ph ph-copy"></i> Copiar
+                                    </button>
+                                    <button class="text-xs flex items-center gap-1.5 px-2 py-1 rounded bg-violet-600/20 text-violet-400 hover:bg-violet-600/30 transition-colors font-medium border border-violet-500/30">
+                                        Aplicar
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Code Content -->
+                            <div class="p-4 overflow-x-auto text-sm font-mono leading-relaxed text-zinc-300">
+<pre><code><span class="text-pink-400">import</span> React, { useState } <span class="text-pink-400">from</span> <span class="text-green-300">'react'</span>;
+
+<span class="text-pink-400">interface</span> <span class="text-blue-300">HeaderProps</span> {
+  title: <span class="text-violet-300">string</span>;
+  onLogout?: () <span class="text-pink-400">=&gt;</span> <span class="text-violet-300">void</span>;
+}
+
+<span class="text-pink-400">export const</span> <span class="text-blue-300">Header</span>: React.<span class="text-blue-300">FC</span>&lt;<span class="text-blue-300">HeaderProps</span>&gt; = ({ title, onLogout }) <span class="text-pink-400">=&gt;</span> {
+  <span class="text-pink-400">const</span> [isOpen, setIsOpen] = <span class="text-blue-300">useState</span>(<span class="text-violet-400">false</span>);
+
+  <span class="text-pink-400">return</span> (
+    &lt;<span class="text-blue-300">header</span> <span class="text-zinc-400">className="flex justify-between"</span>&gt;
+      &lt;<span class="text-blue-300">h1</span>&gt;{title}&lt;/<span class="text-blue-300">h1</span>&gt;
+      <span class="text-zinc-500">{/* Actions */}</span>
+    &lt;/<span class="text-blue-300">header</span>&gt;
+  );
+};</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar below agent message -->
+                        <div class="flex items-center gap-2 pt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button class="p-1.5 text-zinc-500 hover:text-zinc-200 rounded hover:bg-zinc-800 transition"><i class="ph ph-thumbs-up"></i></button>
+                            <button class="p-1.5 text-zinc-500 hover:text-zinc-200 rounded hover:bg-zinc-800 transition"><i class="ph ph-thumbs-down"></i></button>
+                            <button class="p-1.5 text-zinc-500 hover:text-zinc-200 rounded hover:bg-zinc-800 transition"><i class="ph ph-arrows-clockwise"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Approval Request Modal/Block -->
+                <div class="flex gap-4 animate-slide-up stagger-4">
+                    <div class="w-8 h-8 rounded-full bg-yellow-500/10 border border-yellow-500/20 flex flex-shrink-0 items-center justify-center mt-1">
+                        <i class="ph-bold ph-shield-warning text-yellow-500"></i>
+                    </div>
+                    <div class="flex-1 max-w-[80%]">
+                        <div class="glass-panel border-yellow-500/30 rounded-xl overflow-hidden text-sm">
+                            <div class="px-5 py-4 bg-yellow-500/5 border-b border-yellow-500/10">
+                                <h4 class="font-medium text-yellow-500 mb-1">Aprovação Necessária: Executar Comando</h4>
+                                <p class="text-zinc-300 text-xs mb-3">O agente solicitou permissão para instalar novas dependências.</p>
+                                
+                                <div class="bg-black/50 p-2 rounded border border-white/5 font-mono text-xs text-zinc-300 mb-4">
+                                    <span class="text-violet-400">$</span> npm install express @types/express cors
+                                </div>
+                                
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1.5 rounded-lg bg-yellow-500 text-yellow-950 font-medium text-xs hover:bg-yellow-400 transition-colors">Aprovar Instalação</button>
+                                    <button class="px-3 py-1.5 rounded-lg bg-zinc-800 text-zinc-300 font-medium text-xs hover:bg-zinc-700 transition-colors">Recusar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- COMPOSER -->
+        <!-- COMPOSER (Bottom Docked) -->
         <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-zinc-950 via-zinc-950 to-transparent">
-          <div class="max-w-[850px] mx-auto glass-panel rounded-[1.5rem] p-2 shadow-2xl relative">
-            <div id="context-pill" class="hidden absolute -top-10 left-4 bg-zinc-900 border border-white/10 rounded-full px-3 py-1 items-center gap-1.5 text-xs text-zinc-400 shadow-lg">
-              <i class="ph-fill ph-files text-zinc-500"></i>
-              <span id="context-label"></span>
-            </div>
-            <div class="flex flex-col gap-2">
-              <textarea id="composer" class="w-full bg-transparent resize-none outline-none text-sm px-3 py-2 text-zinc-100 placeholder-zinc-500 max-h-min" rows="2" placeholder="Descreva a funcionalidade ou cole um erro aqui..."></textarea>
-
-              <div class="flex items-center justify-between px-1">
-                <div class="flex items-center gap-1">
-                  <button id="upload-btn" title="Anexar" class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
-                    <i class="ph ph-paperclip text-lg"></i>
-                  </button>
-                  <input id="file-input" type="file" multiple class="hidden">
-                  <button id="repo-btn" title="Repositório" class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
-                    <i class="ph ph-git-branch text-lg"></i>
-                  </button>
-                  <button id="terminal-focus" title="Terminal" class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors">
-                    <i class="ph ph-terminal-window text-lg"></i>
-                  </button>
+            <div class="max-w-[850px] mx-auto bg-zinc-900/90 backdrop-blur-xl border border-white/10 rounded-[1.5rem] p-2 shadow-2xl relative">
+                
+                <!-- Context Pill -->
+                <div class="absolute -top-10 left-4 flex gap-2">
+                    <div class="bg-zinc-900 border border-white/10 rounded-full px-3 py-1 flex items-center gap-1.5 text-xs text-zinc-400 shadow-lg">
+                        <i class="ph-fill ph-files text-zinc-500"></i>
+                        <span>3 arquivos detectados</span>
+                        <button class="hover:text-white ml-1"><i class="ph ph-x"></i></button>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-3">
-                  <span class="text-[10px] text-zinc-600 font-mono hidden sm:block">Ctrl + Enter para enviar</span>
-                  <button id="send-btn" aria-label="Enviar mensagem" class="h-9 w-9 rounded-xl bg-violet-600 text-white flex items-center justify-center hover:bg-violet-500 transition-all shadow-glow hover:-translate-y-[1px] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <i class="ph-fill ph-arrow-up"></i>
-                  </button>
+                <div class="flex flex-col gap-2">
+                    <!-- Textarea -->
+                    <textarea class="w-full bg-transparent resize-none outline-none text-sm px-3 py-2 text-zinc-100 placeholder-zinc-500 max-h-min" rows="2" placeholder="Descreva a funcionalidade ou cole um erro aqui..."></textarea>
+                    
+                    <!-- Bottom Controls -->
+                    <div class="flex items-center justify-between px-1">
+                        <div class="flex items-center gap-1">
+                            <button class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors" title="Anexar"><i class="ph ph-paperclip text-lg"></i></button>
+                            <button class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors" title="Web Search"><i class="ph ph-globe text-lg"></i></button>
+                            <button class="p-2 text-zinc-400 hover:text-white hover:bg-zinc-800 rounded-lg transition-colors" title="Selecionar Repositório"><i class="ph ph-git-branch text-lg"></i></button>
+                        </div>
+                        
+                        <div class="flex items-center gap-3">
+                            <span class="text-[10px] text-zinc-600 font-mono hidden sm:block">Ctrl + Enter para enviar</span>
+                            <button class="h-9 w-9 rounded-xl bg-violet-600 text-white flex items-center justify-center hover:bg-violet-500 transition-all shadow-glow hover:-translate-y-[1px] active:scale-95">
+                                <i class="ph-fill ph-arrow-up"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-          <div class="text-center mt-2">
-            <span class="text-[10px] text-zinc-600">A IA pode cometer erros. Verifique códigos gerados antes de aplicar.</span>
-          </div>
+            <div class="text-center mt-2">
+                 <span class="text-[10px] text-zinc-600">A IA pode cometer erros. Verifique códigos gerados antes de aplicar.</span>
+            </div>
         </div>
-      </main>
 
-      <!-- RIGHT PANEL -->
-      <aside id="right-panel" class="right-panel w-[380px] flex-shrink-0 flex-col border-l border-white/5 bg-[#0a0a0c] z-40 lg:z-20">
+    </main>
+
+    <!-- RIGHT PANEL (Context / Terminal / Diff) -->
+    <aside class="w-[380px] flex-shrink-0 flex flex-col border-l border-white/5 bg-[#0a0a0c] hidden lg:flex z-20">
         <!-- Tabs -->
         <div class="flex items-center justify-between px-2 pt-2 border-b border-white/5">
-          <div class="flex items-center gap-1">
-            <button data-tab="files" class="tab px-3 py-2 text-xs font-medium text-white border-b-2 border-violet-500 transition-colors">Arquivos</button>
-            <button data-tab="terminal" class="tab px-3 py-2 text-xs font-medium text-zinc-400 border-b-2 border-transparent hover:text-zinc-200 transition-colors">Terminal</button>
-            <button data-tab="changes" class="tab px-3 py-2 text-xs font-medium text-zinc-400 border-b-2 border-transparent hover:text-zinc-200 transition-colors flex items-center gap-1">
-              Alterações
+            <div class="flex items-center gap-1">
+                <button class="px-3 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 border-b-2 border-transparent transition-colors">Arquivos</button>
+                <button class="px-3 py-2 text-xs font-medium text-white border-b-2 border-violet-500 transition-colors">Terminal</button>
+                <button class="px-3 py-2 text-xs font-medium text-zinc-400 hover:text-zinc-200 border-b-2 border-transparent transition-colors flex items-center gap-1">
+                    Diff <span class="bg-violet-600/20 text-violet-400 text-[9px] px-1.5 rounded-full">1</span>
+                </button>
+            </div>
+            <button class="p-1.5 text-zinc-500 hover:text-white rounded"><i class="ph ph-dots-three text-lg"></i></button>
+        </div>
+
+        <!-- Tab Content: Terminal Integrated -->
+        <div class="flex-1 flex flex-col p-3 overflow-hidden bg-black/50">
+            <!-- Terminal Header -->
+            <div class="flex items-center justify-between text-[10px] text-zinc-500 uppercase tracking-widest font-mono mb-2 px-1">
+                <div class="flex items-center gap-1.5">
+                    <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
+                    bash - workspace
+                </div>
+                <div>0m 14s</div>
+            </div>
+
+            <!-- Terminal Window -->
+            <div class="flex-1 bg-black rounded-lg border border-white/5 p-3 overflow-y-auto font-mono text-xs text-zinc-300 shadow-inner relative flex flex-col justify-end">
+                <div class="space-y-1.5 mb-2">
+                    <div><span class="text-violet-400">user@stupidex:~/core-api-v2$</span> npm run test</div>
+                    <div class="text-zinc-500">
+                        > core-api@2.0.0 test<br>
+                        > jest
+                    </div>
+                    <div>
+                        PASS src/auth/<span class="text-white font-medium">login.test.ts</span><br>
+                        PASS src/auth/<span class="text-white font-medium">jwt.test.ts</span><br>
+                    </div>
+                    <div class="text-emerald-400 mt-2">Test Suites: 2 passed, 2 total</div>
+                    <div class="text-emerald-400">Tests:       8 passed, 8 total</div>
+                    <div class="text-zinc-500">Time:        1.24s</div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-violet-400 mr-2">user@stupidex:~/core-api-v2$</span>
+                    <span class="w-2 h-3.5 bg-zinc-300 cursor-blink inline-block"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mini Git Status Panel (Bottom of right sidebar) -->
+        <div class="h-48 border-t border-white/5 p-4 bg-zinc-950 flex flex-col">
+            <div class="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Alterações Solicitadas</div>
+            
+            <div class="flex-1 overflow-y-auto space-y-2 pr-2">
+                <!-- Diff Item -->
+                <div class="flex items-center justify-between p-2 rounded bg-zinc-900 border border-white/5 group">
+                    <div class="flex items-center gap-2 truncate">
+                        <i class="ph ph-file-ts text-blue-400"></i>
+                        <span class="text-xs truncate text-zinc-300">Header.tsx</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-xs">
+                        <span class="text-emerald-400">+12</span>
+                        <span class="text-red-400">-34</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="w-full mt-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-medium text-zinc-200 transition-colors">
+                Criar Commit
             </button>
-          </div>
-          <button id="close-right" aria-label="Fechar painel" class="p-1.5 text-zinc-500 hover:text-white rounded"><i class="ph ph-x text-lg lg:ph-dots-three"></i></button>
         </div>
+    </aside>
 
-        <!-- Tab: Files -->
-        <div id="tab-files" class="tab-pane flex-1 min-h-0 flex flex-col">
-          <div class="p-3 flex gap-2">
-            <input id="file-search" class="flex-1 bg-zinc-900 rounded-lg px-3 py-2 text-xs outline-none border border-transparent focus:border-violet-500/50 transition-colors" placeholder="Buscar arquivos">
-            <button id="refresh-tree" class="p-2 hover:bg-zinc-800 rounded-lg transition-colors"><i class="ph ph-arrows-clockwise"></i></button>
-          </div>
-          <div id="file-tree" class="flex-1 overflow-y-auto px-2 pb-3"></div>
-          <div id="file-editor-wrap" class="hidden h-1/2 border-t border-white/5 flex-col">
-            <div class="p-2 flex items-center justify-between bg-zinc-900/50">
-              <span id="editor-path" class="text-xs text-zinc-400 truncate font-mono"></span>
-              <button id="save-file" class="text-xs bg-violet-600 hover:bg-violet-500 rounded-lg px-3 py-1.5 font-medium transition-colors">Salvar</button>
-            </div>
-            <textarea id="file-editor" class="flex-1 bg-black p-3 code text-xs outline-none resize-none"></textarea>
-          </div>
-        </div>
+    <!-- Script for Canvas Sequence (Agent Action Visualizer) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('sequence-canvas');
+            const ctx = canvas?.getContext('2d');
+            const scrollContainer = document.getElementById('overlay-scroll-container');
+            
+            if (!canvas || !ctx || !scrollContainer) return;
 
-        <!-- Tab: Terminal -->
-        <div id="tab-terminal" class="tab-pane hidden flex-1 min-h-0 flex-col p-3 overflow-hidden bg-black/50">
-          <div class="flex items-center justify-between text-[10px] text-zinc-500 uppercase tracking-widest font-mono mb-2 px-1">
-            <div class="flex items-center gap-1.5">
-              <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div>
-              bash - workspace
-            </div>
-          </div>
-          <div id="terminal-output" class="flex-1 bg-black rounded-lg border border-white/5 p-3 overflow-y-auto font-mono text-xs text-zinc-300 shadow-inner"></div>
-          <div class="mt-2 flex gap-2">
-            <input id="terminal-input" class="flex-1 bg-zinc-900 rounded-xl px-3 py-2 code text-xs outline-none border border-transparent focus:border-violet-500/50 transition-colors" placeholder="pytest -q">
-            <button id="terminal-run" class="bg-violet-600 hover:bg-violet-500 rounded-xl px-3 transition-colors"><i class="ph ph-play"></i></button>
-          </div>
-        </div>
+            // Setup dimensions
+            canvas.width = 800;
+            canvas.height = 450;
 
-        <!-- Tab: Changes -->
-        <div id="tab-changes" class="tab-pane hidden flex-1 p-4">
-          <div class="glass-panel rounded-xl p-4 text-sm">
-            <div class="flex items-center justify-between mb-3">
-              <span class="font-medium">Git status</span>
-              <button id="git-status" class="text-xs bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-lg transition-colors">Atualizar</button>
-            </div>
-            <pre id="git-output" class="code text-xs text-zinc-400 whitespace-pre-wrap">Nenhuma verificação executada.</pre>
-          </div>
-        </div>
-      </aside>
+            // Configuration corresponding to Step 2
+            const baseUrl = 'https://cdn.aidesigner.ai/video-frames/365e05ad698e-1781407650963-step2/frame-';
+            const frameCount = 121;
+            const images = [];
+            let loadedCount = 0;
 
-    </div>
-  </div>
+            // Preload function
+            const loadImages = () => {
+                for (let i = 1; i <= frameCount; i++) {
+                    const img = new Image();
+                    // Zero-pad index (001, 002...)
+                    const indexStr = String(i).padStart(3, '0');
+                    img.src = `${baseUrl}${indexStr}.webp`;
+                    
+                    img.onload = () => {
+                        loadedCount++;
+                        // Draw first frame when loaded
+                        if(i === 1) drawFrame(0);
+                    };
+                    images.push(img);
+                }
+            };
 
-  <!-- SETTINGS MODAL -->
-  <div id="settings-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
-    <div class="glass-panel w-full max-w-xl rounded-3xl p-6">
-      <div class="flex justify-between mb-5">
-        <h2 class="font-semibold">Modelos e segurança</h2>
-        <button data-close="settings-modal" class="p-1.5 hover:bg-zinc-800 rounded-lg transition-colors"><i class="ph ph-x"></i></button>
-      </div>
-      <form id="settings-form" class="space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <label class="text-xs text-zinc-400">Provedor
-            <input id="provider-input" class="mt-1 w-full bg-zinc-900 rounded-xl p-3 text-sm outline-none border border-transparent focus:border-violet-500/50" placeholder="openai">
-          </label>
-          <label class="text-xs text-zinc-400">Modelo
-            <input id="model-input" class="mt-1 w-full bg-zinc-900 rounded-xl p-3 text-sm outline-none border border-transparent focus:border-violet-500/50" placeholder="gpt-4o-mini">
-          </label>
-        </div>
-        <label class="block text-xs text-zinc-400">Endpoint compativel com OpenAI
-          <input id="base-url-input" class="mt-1 w-full bg-zinc-900 rounded-xl p-3 text-sm outline-none border border-transparent focus:border-violet-500/50" placeholder="Opcional">
-        </label>
-        <label class="block text-xs text-zinc-400">API key
-          <input id="api-key-input" type="password" autocomplete="new-password" class="mt-1 w-full bg-zinc-900 rounded-xl p-3 text-sm outline-none border border-transparent focus:border-violet-500/50" placeholder="Deixe vazio para manter a atual">
-        </label>
-        <label class="block text-xs text-zinc-400">GitHub Personal Access Token
-          <input id="github-token-input" type="password" autocomplete="new-password" class="mt-1 w-full bg-zinc-900 rounded-xl p-3 text-sm outline-none border border-transparent focus:border-violet-500/50" placeholder="Opcional, para repositórios privados">
-        </label>
-        <div class="flex justify-between">
-          <button id="logout-btn" type="button" class="text-red-400 text-sm hover:text-red-300 transition-colors">Sair da conta</button>
-          <button class="bg-violet-600 hover:bg-violet-500 rounded-xl px-5 py-2 text-sm font-medium transition-colors">Salvar</button>
-        </div>
-      </form>
-    </div>
-  </div>
+            const drawFrame = (index) => {
+                if (images[index] && images[index].complete) {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // Draw centered maintaining aspect ratio logic can go here, but stretch for simplicity
+                    ctx.drawImage(images[index], 0, 0, canvas.width, canvas.height);
+                }
+            };
 
-  <!-- PROJECT MODAL -->
-  <div id="project-modal" class="hidden fixed inset-0 z-50 modal-backdrop items-center justify-center p-4">
-    <div class="glass-panel w-full max-w-lg rounded-3xl p-6">
-      <div class="flex justify-between mb-5">
-        <h2 class="font-semibold">Novo projeto</h2>
-        <button data-close="project-modal" class="p-1.5 hover:bg-zinc-800 rounded-lg transition-colors"><i class="ph ph-x"></i></button>
-      </div>
-      <form id="project-form" class="space-y-3">
-        <input id="project-name" class="w-full bg-zinc-900 rounded-xl p-3 outline-none border border-transparent focus:border-violet-500/50 transition-colors" placeholder="Nome do projeto">
-        <input id="project-url" class="w-full bg-zinc-900 rounded-xl p-3 outline-none border border-transparent focus:border-violet-500/50 transition-colors" placeholder="https://github.com/usuario/repositorio.git">
-        <input id="project-branch" class="w-full bg-zinc-900 rounded-xl p-3 outline-none border border-transparent focus:border-violet-500/50 transition-colors" placeholder="Branch (opcional)">
-        <p class="text-xs text-zinc-500">Sem URL, será criado um workspace vazio.</p>
-        <button class="w-full bg-violet-600 hover:bg-violet-500 rounded-xl py-3 font-medium transition-all shadow-glow">Criar projeto</button>
-      </form>
-    </div>
-  </div>
+            // Scroll implementation bound to the internal container
+            const handleScroll = () => {
+                const maxScroll = scrollContainer.scrollHeight - scrollContainer.clientHeight;
+                if (maxScroll <= 0) return;
 
-  <!-- APPROVAL MODAL -->
-  <div id="approval-modal" class="hidden fixed inset-0 z-[60] modal-backdrop items-center justify-center p-4">
-    <div class="glass-panel w-full max-w-lg rounded-3xl p-6 border-yellow-500/20">
-      <div class="flex gap-3">
-        <div class="w-10 h-10 rounded-xl bg-yellow-500/10 grid place-items-center text-yellow-400 flex-shrink-0">
-          <i class="ph ph-shield-warning text-xl"></i>
-        </div>
-        <div>
-          <h2 class="font-semibold text-yellow-400">Aprovação necessária</h2>
-          <p class="text-sm text-zinc-400">Este comando pode instalar dependências ou alterar o Git.</p>
-        </div>
-      </div>
-      <pre id="approval-command" class="mt-4 bg-black rounded-xl p-3 code text-xs"></pre>
-      <div class="mt-4 flex justify-end gap-2">
-        <button id="approval-reject" class="bg-zinc-800 hover:bg-zinc-700 rounded-xl px-4 py-2 text-sm transition-colors">Recusar</button>
-        <button id="approval-accept" class="bg-yellow-500 text-yellow-950 hover:bg-yellow-400 rounded-xl px-4 py-2 text-sm font-medium transition-colors">Aprovar uma vez</button>
-      </div>
-    </div>
-  </div>
+                const progress = scrollContainer.scrollTop / maxScroll;
+                const frameIndex = Math.min(Math.floor(progress * frameCount), frameCount - 1);
+                
+                requestAnimationFrame(() => drawFrame(frameIndex));
+            };
 
-  <!-- DELETE SESSION MODAL -->
-  <div id="delete-session-modal" class="hidden fixed inset-0 z-[60] modal-backdrop items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="delete-session-title">
-    <div class="glass-panel w-full max-w-md rounded-3xl p-6 border-red-500/20 shadow-2xl">
-      <div class="flex gap-4">
-        <div class="w-11 h-11 rounded-xl bg-red-500/10 border border-red-500/20 grid place-items-center text-red-400 flex-shrink-0">
-          <i class="ph ph-trash text-xl"></i>
-        </div>
-        <div class="min-w-0">
-          <h2 id="delete-session-title" class="font-semibold text-zinc-100">Excluir conversa?</h2>
-          <p class="text-sm text-zinc-400 mt-1 leading-relaxed">Esta ação removerá permanentemente a conversa e todas as mensagens.</p>
-        </div>
-      </div>
-      <div class="mt-5 rounded-xl bg-black/30 border border-white/5 px-4 py-3">
-        <div class="text-[10px] uppercase tracking-wider text-zinc-600 mb-1">Conversa</div>
-        <div id="delete-session-name" class="text-sm text-zinc-300 truncate"></div>
-      </div>
-      <div class="mt-5 flex justify-end gap-2">
-        <button type="button" data-close="delete-session-modal" class="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-sm text-zinc-200 transition-colors">Cancelar</button>
-        <button type="button" id="delete-session-confirm" class="px-4 py-2 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-60 disabled:cursor-wait text-sm font-medium text-white transition-colors flex items-center gap-2">
-          <i class="ph ph-trash"></i> Excluir conversa
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
-  <div id="toast" class="fixed right-4 bottom-4 z-[100] hidden max-w-sm border rounded-xl px-4 py-3 text-sm shadow-2xl"></div>
-
-  <script src="/static/app.js"></script>
+            scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+            loadImages();
+        });
+    </script>
 </body>
 </html>
