@@ -1,4 +1,4 @@
-const state={user:null,sessions:[],sessionId:null,sessionPendingDelete:null,workspaces:[],workspaceId:null,models:[],approvalId:null,authMode:'login',rightTab:'files',sending:false,rightOpen:window.matchMedia('(min-width: 1024px)').matches};
+const state={user:null,sessions:[],sessionId:null,sessionPendingDelete:null,workspaces:[],workspaceId:null,models:[],approvalId:null,authMode:'login',rightTab:'terminal',sending:false,rightOpen:window.matchMedia('(min-width: 1024px)').matches};
 const $=id=>document.getElementById(id);
 const api=async(path,options={})=>{const res=await fetch(path,{credentials:'include',headers:{...(options.body instanceof FormData?{}:{'Content-Type':'application/json'}),...(options.headers||{})},...options});let data={};try{data=await res.json()}catch{}if(!res.ok&&res.status!==202)throw new Error(data.error||`Erro ${res.status}`);return {data,status:res.status,res};};
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -72,6 +72,7 @@ async function init(){
   $('app').classList.remove('hidden');
   $('profile-name').textContent=state.user.username;
   setRightPanel(state.rightOpen);
+  switchTab(state.rightTab); /* Sync tab buttons with HTML initial state */
   const results=await Promise.allSettled([loadModels(),loadSessions(),loadWorkspaces()]);
   results.filter(result=>result.status==='rejected').forEach(result=>toast(result.reason?.message||'Falha ao carregar a interface',true));
   if(state.sessions[0])await selectSession(state.sessions[0].id);
