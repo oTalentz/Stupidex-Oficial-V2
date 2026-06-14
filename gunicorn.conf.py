@@ -1,5 +1,5 @@
 import os
-bind = os.getenv("STUPIDEX_BIND", f"0.0.0.0:{os.getenv('PORT', os.getenv('STUPIDEX_PORT', '5000'))}")
+bind = os.getenv("STUPIDEX_BIND", f"0.0.0.0:{os.getenv("PORT", os.getenv("STUPIDEX_PORT", "80"))}")
 workers = int(os.getenv("STUPIDEX_WORKERS", "1"))
 threads = int(os.getenv("STUPIDEX_THREADS", "8"))
 worker_class = "gthread"
