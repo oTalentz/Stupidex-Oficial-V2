@@ -1,0 +1,13 @@
+@echo off
+cd /d C:\Users\leona\Downloads\Stupidex-SquareCloud\Stupidex-SquareCloud
+echo Adding files...
+git add -A
+echo Committing...
+git commit -m "feat: initial full implementation - Stupidex AI coding platform"
+echo Setting remote...
+git remote remove origin 2>nul
+git remote add origin https://github.com/oTalentz/Stupidex-Oficial-V2.git
+echo Pushing...
+git push -u origin main --force
+echo Done!
+pause
