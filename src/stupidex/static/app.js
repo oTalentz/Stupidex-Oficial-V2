@@ -568,10 +568,9 @@ $('terminal-run').onclick=()=>{
   if(c){$('terminal-input').value='';runTerminal(c)}
 };
 $('terminal-input').onkeydown=e=>{if(e.key==='Enter')$('terminal-run').click()};
-$('terminal-focus').onclick=()=>{
-  setRightPanel(true);
-  switchTab('terminal');
-  setTimeout(()=>$('terminal-input').focus(),100);
+$('web-search-btn').onclick=()=>{
+  $('composer').value+='[pesquisa web] ';
+  $('composer').focus();
 };
 
 // Git
